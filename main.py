@@ -1,3 +1,8 @@
+import asyncio
+import time
+
+import aiohttp
+import uvicorn
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -75,3 +80,28 @@ def get_cheese_by_id(cheese_id: int, db: Session = Depends(get_db)):
 @app.delete("/cheese-delete/{cheese_id}", response_model=dict)
 def delete_cheese(cheese_id: int, db: Session = Depends(get_db)) -> dict:
     return crud.delete_cheese(db, cheese_id)
+
+
+
+urls = ["localhost:8000/download-cat/"] * 3
+
+
+async def making_requests(session, url):
+    async with session.get(url) as response:
+        return await response.text()
+
+
+async def main_get_result_from_page():
+    async with aiohttp.ClientSession() as session:
+        tasks = [making_requests(session, url) for url in urls]
+        results = await asyncio.gather(*tasks)
+        return results
+
+
+@app.get("/async-test/", response_model=dict)
+async def start_main():
+    start = time.time()
+    data = await main_get_result_from_page()
+    end = time.time() - start
+    print(end)
+    return {"result": data}

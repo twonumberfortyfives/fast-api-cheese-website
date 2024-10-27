@@ -1,0 +1,8 @@
+services:
+  web:
+    build:
+      context: .
+    ports:
+      - "8000:8001"
+    command: >
+      sh - "fastapi run app/main.py"

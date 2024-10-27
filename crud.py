@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from db import models
 from db.models import DBCheeseType, DBCheese, PackagingType
-from schemas import CheeseTypeCreate, CheeseBase, CheeseCreate
+from schemas import CheeseTypeCreate, CheeseCreate
 
 
 def get_all_cheese_types(db: Session):
